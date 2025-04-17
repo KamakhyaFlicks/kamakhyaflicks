@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
-import founder from '../../assets/images/founder.jpg';
+import founder from '../../assets/images/Founder.jpg';
 const teamMembers = [
   {
     name: 'Mr. Dinesh Singh Rajput',
