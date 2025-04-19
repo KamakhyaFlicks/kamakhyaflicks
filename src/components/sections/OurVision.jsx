@@ -2,7 +2,7 @@ import visionImage from '../../assets/images/filmingVision.png'; // Replace with
 
 const OurVision = () => {
   return (
-    <section className="w-full  bg-[#121212] flex justify-center items-center m-auto py-16 px-4 sm:px-8 lg:px-16">
+    <section className="w-full  bg-[#121212] flex justify-center items-center m-auto p ">
       <div className="max-w-6xl w-full flex flex-col md:flex-row items-center gap-8 ">
         {/* Image */}
         <div className="w-[20rem] md:w-1/2">

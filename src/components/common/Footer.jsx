@@ -3,10 +3,10 @@ import Logo from '../../assets/images/KF.transparent.png';
 const Footer = () => {
   return (
     <footer className="bg-[#121212] text-white px-6 py-12">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 ">
         {/* Logo & Description */}
-        <div>
-          <img src={Logo} alt="Kamakhya Flicks Logo" className="w-24" />
+        <div className='w-1/2'>
+          <img src={Logo} alt="Kamakhya Flicks Logo" className="w-full" />
           <h1 className="text-2xl font-bold mb-2">Kamakhya Flicks</h1>
           <p className="text-sm text-gray-400">
             Crafting creative solutions through motion and media.

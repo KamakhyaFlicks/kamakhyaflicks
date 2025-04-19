@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Dummy testimonial data
 const testimonials = [
   {
     id: 1,
@@ -43,10 +42,8 @@ const testimonials = [
 
 export default function TestimonialCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [cardWidth, setCardWidth] = useState(0);
   const [cardsToShow, setCardsToShow] = useState(3);
-  
-  // Update cards to show based on screen size
+
   useEffect(() => {
     const updateCardsToShow = () => {
       if (window.innerWidth < 640) {
@@ -57,37 +54,28 @@ export default function TestimonialCarousel() {
         setCardsToShow(3);
       }
     };
-    
-    // Set initial value
+
     updateCardsToShow();
-    
-    // Add resize listener
     window.addEventListener('resize', updateCardsToShow);
-    
-    // Cleanup
     return () => window.removeEventListener('resize', updateCardsToShow);
   }, []);
 
-  // Handle next slide
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === testimonials.length - cardsToShow ? 0 : prevIndex + 1
     );
   };
 
-  // Handle previous slide
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? testimonials.length - cardsToShow : prevIndex - 1
     );
   };
 
-  // Auto slide every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
-    
     return () => clearInterval(interval);
   }, [currentIndex]);
 
@@ -95,22 +83,19 @@ export default function TestimonialCarousel() {
     <div className="w-full py-12 px-4 bg-[#121212]">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-yellow-200 mb-8">What Our Clients Say</h2>
-        
         <div className="relative">
-          {/* Carousel container */}
           <div className="overflow-hidden">
-            {/* Carousel track */}
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
+            <div
+              className="flex transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * (100 / cardsToShow)}%)` }}
             >
-              {testimonials.map((testimonial) => (
-                <div 
+              {testimonials.map((testimonial, index) => (
+                <div
                   key={testimonial.id}
-                  className={`flex-shrink-0 px-3 w-full transition-all duration-300`}
-                  style={{ width: `${100 / cardsToShow}%` }}
+                  className={`flex-shrink-0 px-3 w-full transition-all duration-500 opacity-0 animate-fadeIn`}
+                  style={{ width: `${100 / cardsToShow}%`, animationDelay: `${index * 0.1}s`, animationFillMode: "forwards" }}
                 >
-                  <div className="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col hover:shadow-xl transition-shadow duration-300">
+                  <div className="bg-white rounded-xl shadow-md p-6 h-full flex flex-col transform transition-transform hover:scale-[1.03] hover:shadow-2xl duration-500">
                     <div className="flex items-center mb-4">
                       <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
                         <div className="text-blue-500 font-bold text-xl">
@@ -135,25 +120,23 @@ export default function TestimonialCarousel() {
               ))}
             </div>
           </div>
-          
-          {/* Controls */}
-          <button 
+
+          <button
             onClick={prevSlide}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none z-10"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6 text-gray-600" />
           </button>
-          
-          <button 
+
+          <button
             onClick={nextSlide}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none z-10"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6 text-gray-600" />
           </button>
-          
-          {/* Indicators */}
+
           <div className="flex justify-center mt-8">
             {[...Array(testimonials.length - cardsToShow + 1)].map((_, index) => (
               <button
@@ -168,6 +151,23 @@ export default function TestimonialCarousel() {
           </div>
         </div>
       </div>
+
+      {/* Animation Keyframes */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease forwards;
+        }
+      `}</style>
     </div>
   );
 }
