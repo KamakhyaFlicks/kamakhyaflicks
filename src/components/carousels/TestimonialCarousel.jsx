@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const testimonials = [
@@ -43,6 +43,29 @@ const testimonials = [
 export default function TestimonialCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsToShow, setCardsToShow] = useState(3);
+  const [isVisible, setIsVisible] = useState(false);
+  const carouselRef = useRef(null);
+
+  // Observer for scroll animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Set visibility state based on intersection
+        setIsVisible(entries[0].isIntersecting);
+      },
+      { threshold: 0.2 }
+    );
+    
+    if (carouselRef.current) {
+      observer.observe(carouselRef.current);
+    }
+    
+    return () => {
+      if (carouselRef.current) {
+        observer.unobserve(carouselRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const updateCardsToShow = () => {
@@ -77,12 +100,16 @@ export default function TestimonialCarousel() {
       nextSlide();
     }, 5000);
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, [currentIndex, cardsToShow]);
 
   return (
-    <div className="w-full py-12 px-4 bg-[#121212]">
+    <div ref={carouselRef} className="w-full py-12 px-4 bg-[#121212]">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-yellow-200 mb-8">What Our Clients Say</h2>
+        <h2 className={`text-3xl font-bold text-center text-yellow-200 mb-8 transition-all duration-700 ${
+          isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-10'
+        }`}>
+          What Our Clients Say
+        </h2>
         <div className="relative">
           <div className="overflow-hidden">
             <div
@@ -92,8 +119,14 @@ export default function TestimonialCarousel() {
               {testimonials.map((testimonial, index) => (
                 <div
                   key={testimonial.id}
-                  className={`flex-shrink-0 px-3 w-full transition-all duration-500 opacity-0 animate-fadeIn`}
-                  style={{ width: `${100 / cardsToShow}%`, animationDelay: `${index * 0.1}s`, animationFillMode: "forwards" }}
+                  className={`flex-shrink-0 px-3 w-full transition-all duration-500 ${
+                    isVisible ? 'animate-fadeIn' : 'opacity-0'
+                  }`}
+                  style={{ 
+                    width: `${100 / cardsToShow}%`, 
+                    animationDelay: `${(index % cardsToShow) * 0.15}s`, 
+                    animationFillMode: "forwards" 
+                  }}
                 >
                   <div className="bg-white rounded-xl shadow-md p-6 h-full flex flex-col transform transition-transform hover:scale-[1.03] hover:shadow-2xl duration-500">
                     <div className="flex items-center mb-4">
@@ -123,7 +156,9 @@ export default function TestimonialCarousel() {
 
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none z-10"
+            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none z-10 transition-all duration-500 ${
+              isVisible ? 'opacity-100 transform translate-x-0' : 'opacity-0 -translate-x-8'
+            }`}
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6 text-gray-600" />
@@ -131,13 +166,17 @@ export default function TestimonialCarousel() {
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none z-10"
+            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none z-10 transition-all duration-500 ${
+              isVisible ? 'opacity-100 transform translate-x-0' : 'opacity-0 translate-x-8'
+            }`}
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6 text-gray-600" />
           </button>
 
-          <div className="flex justify-center mt-8">
+          <div className={`flex justify-center mt-8 transition-all duration-700 ${
+            isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'
+          }`}>
             {[...Array(testimonials.length - cardsToShow + 1)].map((_, index) => (
               <button
                 key={index}
@@ -155,13 +194,13 @@ export default function TestimonialCarousel() {
       {/* Animation Keyframes */}
       <style jsx>{`
         @keyframes fadeIn {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
           from {
             opacity: 0;
             transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
         .animate-fadeIn {

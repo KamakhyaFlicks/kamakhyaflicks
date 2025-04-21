@@ -10,7 +10,7 @@ function Services() {
     <>
     <div className='w-full overflow-hidden'>
     <div className="relative mb-24 mt-20 text-center flex flex-col justify-center items-center">
-    <div className='absolute left-1/2 -translate-x-1/2 rotate-8 w-[180%] h-[15rem] sm:h-[20rem] md:h-[20rem] lg:h-[20rem] xl:h-[25rem] bg-green-500 z-0 rounded-lg top-[-3rem] sm:top-[-5rem] md:top-[-5rem] lg:top-[-5rem] xl:top-[-5rem] overflow-hidden'></div>
+    <div className='absolute left-1/2 -translate-x-1/2 rotate-8 w-[180%] h-[15rem] sm:h-[20rem] md:h-[20rem] lg:h-[20rem] xl:h-[25rem] bg-red-600 z-0 rounded-lg top-[-3rem] sm:top-[-5rem] md:top-[-5rem] lg:top-[-5rem] xl:top-[-5rem] overflow-hidden'></div>
             <h2 className="inline-block text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[black] via-[black] to-[black] mb-6 tracking-tight z-0">
               Our Services & Portfolios
             </h2>
@@ -25,7 +25,6 @@ function Services() {
               Our Partners & Sponsers
             </h2>
     <SponsorCarousel/>
-    <Projects/>
     </div>
     </>
   )

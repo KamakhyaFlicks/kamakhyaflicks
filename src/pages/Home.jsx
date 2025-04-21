@@ -71,7 +71,7 @@ const Home = () => {
           </motion.div>
         </section>
         
-        {/* <ServicesSection/> */}
+        
       </main>
       <Tilt/>
     </div>
