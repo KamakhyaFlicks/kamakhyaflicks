@@ -1,306 +1,311 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Play, X, Calendar, Users } from 'lucide-react';
+import ProjectsHero from '../components/projects/ProjectsHero';
 
-export default function Projects() {
-  // Sample movie data
-  const previousProjects = [
-    {
-      id: 1,
-      title: "Cosmic Odyssey",
-      year: 2023,
-      director: "Maria Johnson",
-      description: "A mind-bending journey through space and time that challenges our understanding of reality.",
-      image: "/api/placeholder/400/225", // 16:9 ratio placeholder
-      genres: ["Sci-Fi", "Adventure"]
-    },
-    {
-      id: 2,
-      title: "The Silent Echo",
-      year: 2022,
-      director: "James Wilkins",
-      description: "A psychological thriller about a detective who discovers unsettling patterns in a series of mysterious disappearances.",
-      image: "/api/placeholder/400/225",
-      genres: ["Thriller", "Mystery"]
-    },
-    {
-      id: 3,
-      title: "Beyond the Horizon",
-      year: 2021,
-      director: "Sophia Chen",
-      description: "An epic tale of exploration and discovery set in a post-apocalyptic world where hope seems lost.",
-      image: "/api/placeholder/400/225",
-      genres: ["Drama", "Action"]
-    },
-  ];
+const projects = [
+  {
+    id: '1',
+    title: 'Queen Of Delhi - 2024',
+    thumbnail: 'https://img.youtube.com/vi/njkVVljpgMM/maxresdefault.jpg',
+    youtubeId: 'njkVVljpgMM',
+    category: 'Queen of Delhi Modelling Show',
+    description: 'A soulful journey through love and loss, captured in stunning visuals',
+    status: 'completed',
+    year: '2024'
+  },
+  {
+    id: '2',
+    title: 'Music Production',
+    thumbnail: 'https://img.youtube.com/vi/mOl2YsbABVQ/maxresdefault.jpg',
+    youtubeId: 'mOl2YsbABVQ',
+    category: 'Music Video',
+    description: 'Urban storytelling with dynamic cinematography and compelling narrative',
+    status: 'completed',
+    year: '2024'
+  },
+  {
+    id: '3',
+    title: 'Echoes of Tomorrow',
+    thumbnail: 'https://img.youtube.com/vi/C5WP6X9nEGY/maxresdefault.jpg',
+    youtubeId: 'C5WP6X9nEGY',
+    category: 'Music Video',
+    description: 'Futuristic visuals meet classical music in this innovative production',
+    status: 'completed',
+    year: '2023'
+  },
+  {
+    id: '4',
+    title: 'Digital Dreams',
+    thumbnail: 'https://img.youtube.com/vi/lIOkyYxKQDQ/maxresdefault.jpg',
+    youtubeId: 'lIOkyYxKQDQ',
+    category: 'Web Series',
+    description: 'A thrilling web series exploring the intersection of technology and humanity',
+    status: 'completed',
+    year: '2024'
+  },
+  {
+    id: '5',
+    title: 'Queen of Delhi',
+    thumbnail: 'https://img.youtube.com/vi/wb_ah5YBjIw/maxresdefault.jpg',
+    youtubeId: 'wb_ah5YBjIw',
+    category: 'Modelling Show',
+    description: 'Celebrating beauty, talent, and empowerment in the heart of Delhi',
+    status: 'completed',
+    year: '2024'
+  },
+  {
+    id: '6',
+    title: 'Bhaksan - crime thriller',
+    thumbnail: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop',
+    youtubeId: '',
+    category: 'Webseries',
+    description: 'An atmospheric music video featuring ethereal landscapes and emotional depth',
+    status: 'upcoming',
+    year: '2025'
+  }
+];
 
-  const upcomingProjects = [
-    {
-      id: 4,
-      title: "Whispers in the Dark",
-      year: 2025,
-      director: "Robert Nolan",
-      description: "A haunting supernatural horror that explores the thin veil between our world and what lies beyond.",
-      image: "/api/placeholder/400/225",
-      genres: ["Horror", "Supernatural"]
-    },
-    {
-      id: 5,
-      title: "Parallel Hearts",
-      year: 2026,
-      director: "Elena Martinez",
-      description: "A romantic drama set across parallel universes where two souls are destined to find each other despite the odds.",
-      image: "/api/placeholder/400/225",
-      genres: ["Romance", "Drama"]
-    },
-  ];
-
-  // For animation - track visible elements
-  const [visibleElements, setVisibleElements] = useState({});
-
-  useEffect(() => {
-    // Set initial state to show all items on first render
-    const initialState = {};
-    [...previousProjects, ...upcomingProjects].forEach(movie => {
-      initialState[`movie-${movie.id}`] = false;
-    });
-    setVisibleElements(initialState);
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setVisibleElements(prev => ({
-              ...prev,
-              [entry.target.id]: true
-            }));
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    // Slight delay to ensure DOM elements are ready
-    setTimeout(() => {
-      document.querySelectorAll('.timeline-item').forEach(item => {
-        observer.observe(item);
-      });
-    }, 100);
-
-    return () => {
-      document.querySelectorAll('.timeline-item').forEach(item => {
-        observer.unobserve(item);
-      });
-    };
-  }, []);
-
-  const MovieCard = ({ movie, index, type }) => {
-    const isEven = index % 2 === 0;
-    const position = type === 'previous' ? 
-      (isEven ? 'left' : 'right') : 
-      (isEven ? 'right' : 'left');
-    
-    const isVisible = visibleElements[`movie-${movie.id}`];
-    
-    return (
-      <div 
-        id={`movie-${movie.id}`}
-        className={`timeline-item relative mb-16 md:mb-24 ${
-          position === 'left' ? 'md:ml-0 md:mr-auto md:pr-12' : 'md:ml-auto md:mr-0 md:pl-12'
-        } w-full md:w-1/2 transition-all duration-1000 ease-out ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        } ${
-          isVisible ? (position === 'left' ? 'translate-x-0' : 'translate-x-0') : 
-                     (position === 'left' ? '-translate-x-full' : 'translate-x-full')
-        }`}
-      >
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition hover:scale-105 duration-300">
-          <div className="relative">
-            <img 
-              src={movie.image} 
-              alt={movie.title} 
-              className="w-full h-48 sm:h-64 object-cover"
-            />
-            <div className="absolute top-0 right-0 bg-black bg-opacity-70 text-white px-3 py-1 m-2 rounded-full">
-              {movie.year}
-            </div>
-          </div>
-          
-          <div className="p-6">
-            <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800">{movie.title}</h3>
-            <p className="text-sm text-gray-600 mb-2">Directed by {movie.director}</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {movie.genres.map(genre => (
-                <span key={genre} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                  {genre}
-                </span>
-              ))}
-            </div>
-            <p className="text-gray-700">{movie.description}</p>
+// Fixed ProjectCard as a proper React component
+const ProjectCard = ({ project, onClick }) => (
+  <div 
+    className={`group rounded-lg border bg-card text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+      project.status === 'completed' ? 'cursor-pointer' : 'cursor-default'
+    }`}
+    onClick={() => onClick(project)}
+  >
+    <div className="relative aspect-video overflow-hidden">
+      <img
+        src={project.thumbnail}
+        alt={project.title}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      
+      {/* Overlay */}
+      <div className={`absolute inset-0 transition-all duration-300 ${
+        project.status === 'completed' 
+          ? 'bg-black/20 group-hover:bg-black/60' 
+          : 'bg-black/40'
+      }`} />
+      
+      {/* Play Button - Only for completed projects */}
+      {project.status === 'completed' && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-300">
+            <Play className="w-6 h-6 text-white ml-1" fill="white" />
           </div>
         </div>
-        
-        {/* Timeline connector */}
-        <div className={`hidden md:block absolute top-1/2 ${
-          position === 'left' ? 'right-0' : 'left-0'
-        } w-12 h-0.5 bg-gray-300`}></div>
-        
-        <div className={`hidden md:block absolute top-1/2 ${
-          position === 'left' ? 'right-0' : 'left-0'
-        } transform -translate-y-1/2 ${
-          position === 'left' ? '-translate-x-6' : 'translate-x-6'
-        } w-3 h-3 rounded-full bg-blue-500 border-4 border-white shadow-lg`}></div>
+      )}
+
+      {/* Status Badge */}
+      <div className={`absolute top-4 left-4 px-3 py-1 rounded-full backdrop-blur-sm ${
+        project.status === 'completed' 
+          ? 'bg-green-600/90' 
+          : 'bg-amber-600/90'
+      }`}>
+        <span className="text-white text-xs font-medium flex items-center gap-1">
+          {project.status === 'completed' ? (
+            <>
+              <div className="w-2 h-2 bg-white rounded-full" />
+              Completed
+            </>
+          ) : (
+            <>
+              <Calendar className="w-3 h-3" />
+              Coming Soon
+            </>
+          )}
+        </span>
       </div>
-    );
+
+      {/* Category Badge */}
+      <div className="absolute top-4 right-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full">
+        <span className="text-white text-xs font-medium">{project.category}</span>
+      </div>
+
+      {/* Year Badge */}
+      {project.year && (
+        <div className="absolute bottom-4 right-4 px-2 py-1 bg-white/90 backdrop-blur-sm rounded">
+          <span className="text-black text-xs font-medium">{project.year}</span>
+        </div>
+      )}
+    </div>
+
+    <div className="p-6">
+      <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-amber-600 transition-colors duration-300">
+        {project.title}
+      </h3>
+      <p className="text-muted-foreground text-sm leading-relaxed">
+        {project.description}
+      </p>
+    </div>
+  </div>
+);
+
+const ProjectsGrid = () => {
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const completedProjects = projects.filter(p => p.status === 'completed');
+  const upcomingProjects = projects.filter(p => p.status === 'upcoming');
+
+  const handleCardClick = (project) => {
+    if (project.status === 'completed') {
+      setSelectedProject(project);
+      setIsDialogOpen(true);
+    }
   };
 
-  // Alternative approach - simpler animation that should work more reliably
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedProject(null);
+  };
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleCloseDialog();
+    }
+  };
+
+  // Close modal on Escape key
+  React.useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isDialogOpen) {
+        handleCloseDialog();
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isDialogOpen]);
+
   return (
-    <div className="bg-[#121212] min-h-screen py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto xl:max-w-[90%]">
-                <div className="relative w-full h-[300px] md:h-[450px] lg:h-[500px]  mb-16">
-        <img
-            src="https://images.unsplash.com/photo-1582719478185-2d08784f1f1d?auto=format&fit=crop&w=1600&q=80"
-            // Replace with a real image URL or your own banner image
-            alt="Our Projects Banner"
-            className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-yellow-400 bg-opacity-60 flex flex-col justify-center items-center text-center px-4">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4">Our Creative Journey</h2>
-            <p className="text-lg md:text-xl text-gray-500 max-w-2xl">
-            "Every frame tells a story, every project is a dream realized."
-            </p>
-        </div>
+    <div className="py-16 bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Featured Projects */}
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-foreground">
+              Featured Work
+            </h2>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Users className="w-4 h-4" />
+              <span className="text-sm">{completedProjects.length} Projects Completed</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {completedProjects.map((project) => (
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                onClick={handleCardClick}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Previous Projects Section */}
-        <section className="mb-24 ">
-          <h2 className="text-3xl font-bold text-center mb-12 text-yellow-400">Previous Projects</h2>
-          
-          <div className="relative">
-            {/* Center Timeline */}
-            <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 h-full"></div>
+        {/* Upcoming Projects */}
+        {upcomingProjects.length > 0 && (
+          <div>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-foreground">
+                Upcoming Projects
+              </h2>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm">Coming Soon</span>
+              </div>
+            </div>
             
-            <div>
-              {previousProjects.map((movie, index) => {
-                const isEven = index % 2 === 0;
-                const position = isEven ? 'left' : 'right';
-                
-                return (
-                  <div key={movie.id} className="relative">
-                    <div 
-                      id={`movie-${movie.id}`}
-                      className={`timeline-item relative mb-16 md:mb-24 ${
-                        position === 'left' ? 'md:mr-auto md:pr-12' : 'md:ml-auto md:pl-12'
-                      } md:w-1/2 w-full transition-all duration-1000 ease-out`}
-                    >
-                      <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition hover:scale-105 duration-300">
-                        <div className="relative">
-                          <img 
-                            src={movie.image} 
-                            alt={movie.title} 
-                            className="w-full h-48 sm:h-64 object-cover"
-                          />
-                          <div className="absolute top-0 right-0 bg-black bg-opacity-70 text-white px-3 py-1 m-2 rounded-full">
-                            {movie.year}
-                          </div>
-                        </div>
-                        
-                        <div className="p-6">
-                          <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800">{movie.title}</h3>
-                          <p className="text-sm text-gray-600 mb-2">Directed by {movie.director}</p>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {movie.genres.map(genre => (
-                              <span key={genre} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                                {genre}
-                              </span>
-                            ))}
-                          </div>
-                          <p className="text-gray-700">{movie.description}</p>
-                        </div>
-                      </div>
-                      
-                      {/* Timeline connector */}
-                      <div className={`hidden md:block absolute top-1/2 ${
-                        position === 'left' ? 'right-0' : 'left-0'
-                      } w-12 h-0.5 bg-gray-300`}></div>
-                      
-                      <div className={`hidden md:block absolute top-1/2 ${
-                        position === 'left' ? 'right-0' : 'left-0'
-                      } transform -translate-y-1/2 ${
-                        position === 'left' ? '-translate-x-6' : 'translate-x-6'
-                      } w-3 h-3 rounded-full bg-blue-500 border-4 border-white shadow-lg`}></div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {upcomingProjects.map((project) => (
+                <ProjectCard 
+                  key={project.id} 
+                  project={project} 
+                  onClick={handleCardClick}
+                />
+              ))}
             </div>
           </div>
-        </section>
-        
-        {/* Upcoming Projects Section */}
-        <section >
-          <h2 className="text-3xl font-bold text-center mb-12 text-green-600">Upcoming Projects</h2>
-          
-          <div className="relative">
-            {/* Center Timeline */}
-            <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 h-full"></div>
-            
-            <div>
-              {upcomingProjects.map((movie, index) => {
-                const isEven = index % 2 === 0;
-                const position = isEven ? 'right' : 'left';
-                
-                return (
-                  <div key={movie.id} className="relative">
-                    <div 
-                      id={`movie-${movie.id}`}
-                      className={`timeline-item relative mb-16 md:mb-24 ${
-                        position === 'left' ? 'md:mr-auto md:pr-12' : 'md:ml-auto md:pl-12'
-                      } md:w-1/2 w-full transition-all duration-1000 ease-out`}
-                    >
-                      <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition hover:scale-105 duration-300">
-                        <div className="relative">
-                          <img 
-                            src={movie.image} 
-                            alt={movie.title} 
-                            className="w-full h-48 sm:h-64 object-cover"
-                          />
-                          <div className="absolute top-0 right-0 bg-black bg-opacity-70 text-white px-3 py-1 m-2 rounded-full">
-                            {movie.year}
-                          </div>
-                        </div>
-                        
-                        <div className="p-6">
-                          <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800">{movie.title}</h3>
-                          <p className="text-sm text-gray-600 mb-2">Directed by {movie.director}</p>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {movie.genres.map(genre => (
-                              <span key={genre} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                                {genre}
-                              </span>
-                            ))}
-                          </div>
-                          <p className="text-gray-700">{movie.description}</p>
-                        </div>
-                      </div>
-                      
-                      {/* Timeline connector */}
-                      <div className={`hidden md:block absolute top-1/2 ${
-                        position === 'left' ? 'right-0' : 'left-0'
-                      } w-12 h-0.5 bg-gray-300`}></div>
-                      
-                      <div className={`hidden md:block absolute top-1/2 ${
-                        position === 'left' ? 'right-0' : 'left-0'
-                      } transform -translate-y-1/2 ${
-                        position === 'left' ? '-translate-x-6' : 'translate-x-6'
-                      } w-3 h-3 rounded-full bg-blue-500 border-4 border-white shadow-lg`}></div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        )}
       </div>
+
+      {/* Video Modal */}
+      {isDialogOpen && selectedProject && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm"
+          onClick={handleBackdropClick}
+        >
+          <div className="relative max-w-6xl w-full max-h-[90vh] bg-black border border-gray-700 rounded-lg overflow-hidden shadow-2xl">
+            {/* Close Button */}
+            <button 
+              onClick={handleCloseDialog}
+              className="absolute top-4 right-4 z-50 w-12 h-12 bg-black/70 hover:bg-black/90 rounded-full flex items-center justify-center transition-colors duration-200 backdrop-blur-sm border border-gray-600"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+
+            {/* Project Info */}
+            <div className="absolute top-4 left-4 z-50 bg-black/80 backdrop-blur-sm rounded-lg p-4 max-w-md border border-gray-700">
+              <h3 className="text-white font-semibold text-lg mb-1">{selectedProject.title}</h3>
+              <p className="text-gray-300 text-sm mb-2">{selectedProject.category} • {selectedProject.year}</p>
+              <p className="text-gray-400 text-xs">{selectedProject.description}</p>
+            </div>
+
+            {/* YouTube Video */}
+            <div className="w-full aspect-video">
+              <iframe
+                src={`https://www.youtube.com/embed/${selectedProject.youtubeId}?autoplay=1&rel=0&modestbranding=1&fs=1&iv_load_policy=3`}
+                title={selectedProject.title}
+                className="w-full h-full rounded-lg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+const Projects = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <ProjectsHero/>
+      
+      {/* Page Header */}
+      <section className="pt-24 pb-16 bg-gradient-to-br from-background to-accent/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+            Our
+            <span className="text-amber-600 ml-2">Projects</span>
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Discover our creative journey through music videos, web series, and live productions that bring stories to life
+          </p>
+        </div>
+      </section>
+
+      <ProjectsGrid />
+      
+      {/* Call to Action */}
+      <section className="py-16 bg-amber-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            Ready to Create Something Amazing?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Let's collaborate on your next project and bring your vision to life
+          </p>
+          <button className="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-md transition-colors duration-300">
+            Start Your Project
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Projects;

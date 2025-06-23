@@ -1,99 +1,94 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { navLinks } from '../../constants/navLinks';
-import Logo from '../../assets/images/KF.transparent.png'; // Adjust the import based on your logo path
-import { Link } from 'react-router-dom';
+import logo from "../../assets/images/logo.png";
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  // Handle scroll effect for navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Toggle mobile menu
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'Projects', href: 'projects' },
+    { name: 'Services', href: 'services' },
+    { name: 'About', href: 'about' },
+    
+  ];
 
   return (
-    <nav
-      className={`relative top-0 h-[7rem] w-full z-50 transition-all ease-in-out duration-300 bg-[#121212] ${
-        scrolled ? 'fixed top-[-100px] shadow-md' : 'absolute top-[0] ease-in-out'
-      }`}
-    >
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-[2rem] pb-[2rem]">
-        <div className="flex items-center justify-between h-16">
+    <nav className="sticky mt-6 z-50">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 w-30 h-30">
-            <span className="text-white font-bold text-xl">
-              <img src={Logo} alt="Logo" className="inline-block mr-2" />
-            </span>
+          <div className="flex-shrink-0">
+            <div className="flex w-[7rem] items-center">
+            <img className='w-full' src={logo}/>
+            </div>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-6">
+            <div className="ml-10 flex items-baseline space-x-8">
               {navLinks.map((link) => (
                 <a
-                  key={link}
-                  href={`${link.toLowerCase()}`}
-                  className="text-[#f4f175] hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  key={link.name}
+                  href={link.href}
+                  className="text-white hover:text-amber-600 px-3 py-2 text-md font-medium transition-colors duration-200 relative group"
                 >
-                  {link}
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-300 group-hover:w-full"></span>
                 </a>
               ))}
             </div>
           </div>
 
+          {/* Register Button */}
+          <div className="hidden md:block">
+            <a href='register'> 
+
+            <button className="bg-white text-black px-8 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100 hover:text-amber-600">
+              Register
+            </button>
+            </a>
+          </div>
+
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden">
             <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
-              aria-expanded="false"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-50 transition-colors duration-200"
             >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
+              {isMenuOpen ? (
+                <X className="block text-white h-5 w-5" />
               ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
+                <Menu className="block text-white h-5 w-5" />
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on menu state */}
-      <div
-        className={`md:hidden ${isOpen ? 'block' : 'hidden'} w-full top-25 absolute transition-transform duration-500 transform ${
-          isOpen ? 'translate-y-0' : 'translate-y-[-200%]'
-        }`}
-      >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#121212] shadow-lg">
-          {navLinks.map((link) => (
-            <a
-              key={link}
-              href={`${link.toLowerCase()}`}
-              className="text-[#f4f175] hover:text-white block px-3 py-2 rounded-md text-base font-medium border-l-4 border-transparent hover:border-indigo-500 transition-all duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              {link}
-            </a>
-          ))}
+      {/* Mobile Navigation Menu */}
+      {isMenuOpen && (
+        <div className="absolute w-full h-[45vh] md:hidden bg-brown-900 rounded-md bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-50  ">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-white hover:text-amber-600 hover:bg-amber-50 block px-3 py-2 text-base font-medium rounded-lg transition-colors duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+            <div className="pt-2">
+              <button className="w-full text-black bg-white px-3 py-2 rounded-lg text-base font-medium transition-all duration-200">
+                Register
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
-}
+};
+
+export default Navbar;
